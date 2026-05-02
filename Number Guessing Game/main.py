@@ -16,7 +16,6 @@ def check_guess():
 
     user_input = entry.get()
 
-    # Validate input
     if not user_input.isdigit():
         result_label.configure(text="❌ Write an integer please")
         return
@@ -27,11 +26,10 @@ def check_guess():
         result_label.configure(text="❌ Enter number between 1–1000")
         return
 
-    # Increase attempts
     attempts += 1
     attempts_label.configure(text=f"Attempts: {attempts}/{max_attempts}")
 
-    # Check max attempts
+    # Out of attempts
     if attempts >= max_attempts and guess != number:
         result_label.configure(
             text=f"❌ You ran out of chances! Number was {number}"
@@ -69,30 +67,41 @@ def check_guess():
             result_label.configure(text="Slightly low ⬇")
 
 
-# UI Setup
+def reset_game():
+    global number, attempts
+
+    number = random.randint(1, 1000)
+    attempts = 0
+
+    attempts_label.configure(text=f"Attempts: 0/{max_attempts}")
+    result_label.configure(text="")
+
+    entry.delete(0, "end")
+    button.configure(state="normal")
+
+
+# UI
 app = ctk.CTk()
 app.title("Number Guessing Game")
-app.geometry("400x350")
+app.geometry("400x380")
 
-# Title
 title = ctk.CTkLabel(app, text="Guess Number (1–1000)", font=("Arial", 20))
 title.pack(pady=15)
 
-# Attempts display
 attempts_label = ctk.CTkLabel(app, text=f"Attempts: 0/{max_attempts}")
 attempts_label.pack(pady=5)
 
-# Entry
 entry = ctk.CTkEntry(app, placeholder_text="Enter your guess")
 entry.pack(pady=10)
 
-# Button
 button = ctk.CTkButton(app, text="Check", command=check_guess)
 button.pack(pady=10)
 
-# Result
+# 🔁 Replay button
+reset_button = ctk.CTkButton(app, text="Play Again 🔄", command=reset_game)
+reset_button.pack(pady=10)
+
 result_label = ctk.CTkLabel(app, text="")
 result_label.pack(pady=20)
 
-# Run app
 app.mainloop()
